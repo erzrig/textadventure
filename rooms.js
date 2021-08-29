@@ -1,9 +1,3 @@
-function Prop(id, name, description) {
-  this.id = id;
-  this.name = name;
-  this.description = description;
-}
-
 function Room(id, description, exits){
   this.id = id;
   this.description = description;
@@ -23,7 +17,6 @@ roomlist.push(
     [2,,,]
   )
 );
-roomlist[0].props.push(new Prop(0,'trashcan', "It's a heavily dented trashcan on it's side."));
 
 roomlist.push(
   new Room(

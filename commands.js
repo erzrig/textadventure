@@ -12,7 +12,9 @@ $('body').terminal(function(command) {
               '\n[[b;#fff;]look] - Describes the room' +
               '\n[[b;#fff;]exits] Shows room exits' +
               '\n[[b;#fff;]clear] Clears the screen');
-  }else if(cmd.name.toLowerCase() === 'look' || cmd.name === 'description'){
+  }
+
+  else if(cmd.name.toLowerCase() === 'look'){
     if(cmd.args[0] === 'at'){
         if(roomlist[loc].props.findIndex(x => x.name === cmd.args[1].toLowerCase()) != -1){
             this.echo(roomlist[loc].props[roomlist[loc].props.findIndex(x => x.name === cmd.args[1].toLowerCase())].description);
@@ -22,7 +24,9 @@ $('body').terminal(function(command) {
     }else {
     this.echo(roomlist[loc].description, { typing: true, delay: (delay/4) });
     }
-  }else if(cmd.name.toLowerCase() === 'n'){
+  }
+
+  else if(cmd.name.toLowerCase() === 'n'){
     if(roomlist[loc].exits[0] == null){
       this.echo('Unable to go there.', { typing: true, delay: delay });
     }else{
@@ -34,7 +38,9 @@ $('body').terminal(function(command) {
         this.echo(roomlist[loc].description, { typing: true, delay: delay });
       }
     }
-  }else if(cmd.name.toLowerCase() === 's'){
+  }
+
+  else if(cmd.name.toLowerCase() === 's'){
     if(roomlist[loc].exits[1] == null){
       this.echo('Unable to go there.', { typing: true, delay: delay });
     }else{
@@ -46,7 +52,9 @@ $('body').terminal(function(command) {
         this.echo(roomlist[loc].description, { typing: true, delay: delay });
       }
     }
-  }else if(cmd.name.toLowerCase() === 'e'){
+  }
+
+  else if(cmd.name.toLowerCase() === 'e'){
     if(roomlist[loc].exits[3] == null){
       this.echo('Unable to go there.', { typing: true, delay: delay });
     }else{
@@ -58,7 +66,9 @@ $('body').terminal(function(command) {
         this.echo(roomlist[loc].description, { typing: true, delay: delay });
       }
     }
-  }else if(cmd.name.toLowerCase() === 'w'){
+  }
+
+  else if(cmd.name.toLowerCase() === 'w'){
     if(roomlist[loc].exits[2] == null){
       this.echo('Unable to go there.', { typing: true, delay: delay });
     }else{
@@ -71,6 +81,7 @@ $('body').terminal(function(command) {
       }
     }
   }
+
   else if(cmd.name.toLowerCase() === 'exits' || cmd.name.toLowerCase() === 'exit'){
     let exits = '';
     if(roomlist[loc].exits[0] != null){
@@ -86,7 +97,9 @@ $('body').terminal(function(command) {
       exits += 'E '
     }
     this.echo('[[b;#fff;]' + exits +']', { typing: true, delay: delay });
-  }else if(cmd.name.toLowerCase() === 'inv'){
+  }
+
+  else if(cmd.name.toLowerCase() === 'inv'){
     if(inventory.length == 0){
       this.echo('Your pockets are empty.', { typing: true, delay: (delay/4) });
     }else{
@@ -96,7 +109,9 @@ $('body').terminal(function(command) {
       }
       this.echo(output, { typing: true, delay: (delay/4) });
     }
-  }else if(cmd.name.toLowerCase() === 'take'){
+  }
+
+  else if(cmd.name.toLowerCase() === 'take'){
     if(roomlist[loc].props.findIndex(x => x.name === cmd.args[0].toLowerCase()) != -1){
       let propindex = roomlist[loc].props.findIndex(x => x.name === cmd.args[0].toLowerCase());
       inventory.push(roomlist[loc].props[propindex]);
