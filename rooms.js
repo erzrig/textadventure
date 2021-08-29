@@ -13,7 +13,7 @@ var roomlist = new Array;
 roomlist.push(
   new Room(
     1,
-    "You stand in a dead end with a trashcan laying on its side.",
+    "You stand in a dead end.",
     [2,,,]
   )
 );
