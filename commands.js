@@ -1,7 +1,7 @@
 var loc = 0;
 var delay = 25;
 var inventory = new Array();
-var debug = true;
+var debug = false;
 
 $('body').terminal(function(command) {
   var cmd = $.terminal.parse_command(command);
@@ -98,13 +98,31 @@ $('body').terminal(function(command) {
     }else{
       this.echo('You are not carrying that.', { typing: debug, delay: (delay) });
     }
-  }else if(cmd.name.toLowerCase() === 'debug'){
+  }
+
+  else if(cmd.name.toLowerCase() === 'debug'){
     debug = !debug;
     this.echo('Debug: ' + !debug);
   }
 
+  else if(cmd.name.toLowerCase() === 'use'){
+    if(cmd.args.length == 2){
+      if(propininv(cmd.args[0].toLowerCase()) != -1) {
+        if(propininv(cmd.args[0].toLowerCase()) != -1 || propinroom(cmd.args[0].toLowerCase()) != -1){
+            this.echo(cmd.args[0] + ' | ' + cmd.args[1]);
+        }else{
+          this.echo("You can't do that.", { typing: debug, delay: delay });
+        }
+      }else{
+      this.echo("You need to hold something to be able to use it.", { typing: debug, delay: delay });
+    }
+  }else{
+    this.echo("Use what on what?", { typing: debug, delay: delay });
+  }
+  }
+
   else{
-    this.echo('[[b;#fff;]Unknown Command]', { typing: true, delay: delay });
+    this.echo('[[b;#fff;]Unknown Command]', { typing: debug, delay: delay });
   }
 }, {
     greetings: function() {
@@ -114,6 +132,6 @@ $('body').terminal(function(command) {
         for(let i = 0; i < roomlist[loc].props.length; i++){
           output += ' ' + roomlist[loc].props[i].roomdescription;
         }
-      this.echo(output, { typing: true, delay: delay });
+      this.echo(output, { typing: debug, delay: delay });
     }
 });
