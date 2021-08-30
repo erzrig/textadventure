@@ -11,10 +11,11 @@ $('body').terminal(function(command) {
               '\n[[b;#fff;]e] - Go East' +
               '\n[[b;#fff;]w] - Go West' +
               '\n[[b;#fff;]look] - Describes the room' +
-              '\n[[b;#fff;]look at] - Describes the thing' +
+              '\n[[b;#fff;]look at] - look at <object>' +
               '\n[[b;#fff;]inv] - Lists your inventory' +
-              '\n[[b;#fff;]take] - Take an item' +
-              '\n[[b;#fff;]drop] - Drop an item' +
+              '\n[[b;#fff;]take] - take <object>' +
+              '\n[[b;#fff;]use] - use <item in inventory> <item>' +
+              '\n[[b;#fff;]drop] - drop <item>' +
               '\n[[b;#fff;]exits] Shows room exits' +
               '\n[[b;#fff;]clear] Clears the screen');
   }
@@ -108,8 +109,10 @@ $('body').terminal(function(command) {
   else if(cmd.name.toLowerCase() === 'use'){
     if(cmd.args.length == 2){
       if(propininv(cmd.args[0].toLowerCase()) != -1) {
-        if(propininv(cmd.args[0].toLowerCase()) != -1 || propinroom(cmd.args[0].toLowerCase()) != -1){
-            this.echo(cmd.args[0] + ' | ' + cmd.args[1]);
+        if(propininv(cmd.args[1].toLowerCase()) != -1){
+          this.echo(inventory[propininv(cmd.args[0].toLowerCase())].use(inventory[propininv(cmd.args[1].toLowerCase())]));
+        }else if (propinroom(cmd.args[1].toLowerCase()) != -1){
+          this.echo(inventory[propininv(cmd.args[0].toLowerCase())].use(roomlist[loc].props[propinroom(cmd.args[1].toLowerCase())]));
         }else{
           this.echo("You can't do that.", { typing: debug, delay: delay });
         }

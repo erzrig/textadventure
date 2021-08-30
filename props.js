@@ -8,15 +8,17 @@ function Prop(id, name, description, roomdescription, shortdesc, item, usable) {
   this.usable = usable;
 }
 
-Prop.prototype.use = function(Prop){
+Prop.prototype.use = function(item){
+  let output = '';
   // this | refers to the object that is calling the function.
   // Prop | refers to the other object that is referenced.
   // Need to generalize the add and remove functions from rooms and inventory so that it can be used here.
-  if(this.usable == true && Prop.usable == true){
-    console.log(Prop.name + ' is smashed against ' + this.name);
+  if(this.usable == true && item.usable == true){
+    output += this.name + ' is smashed against ' + item.name;
   }else{
-    console.log("No can do scooby doo");
+    output += "No can do scooby doo";
   }
+  return output;
 }
 
 
