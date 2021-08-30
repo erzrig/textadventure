@@ -21,5 +21,24 @@ Prop.prototype.use = function(Prop){
 
 
 //Room 1
-roomlist[0].props.push(new Prop(0,'trashcan', "It's a heavily dented trashcan with the word Excalican carved into it.", "A heavily dented trashcan is laying on it's side.", "It's a trashcan genius.", true, true));
-roomlist[0].props.push(new Prop(1,'rock', "It's your best friend, it has eyes and everything. You have named it Hugh.", "A small rock looks at you with hope in it's eyes.", "It's a rock.", true, true));
+var trashcan = new Prop(
+  0,
+  'trashcan',
+  "It's a heavily dented trashcan with the word Excalican carved into it.",
+  "A heavily dented trashcan is laying on it's side.",
+  "It's a trashcan genius.",
+  true,
+  true
+);
+var rock = new Prop(
+  1,
+  'rock',
+  "It's your best friend, it has eyes and everything. You have named it Hugh.",
+  "A small rock looks at you with hope in it's eyes.",
+  "It's a rock.",
+  true,
+  true
+);
+
+roomlist[0].props.push(trashcan);
+roomlist[0].props.push(rock);
