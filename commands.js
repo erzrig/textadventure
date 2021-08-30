@@ -1,5 +1,5 @@
 var loc = 0;
-var delay = 50;
+var delay = 25;
 var inventory = new Array();
 var debug = true;
 
@@ -11,6 +11,7 @@ $('body').terminal(function(command) {
               '\n[[b;#fff;]e] - Go East' +
               '\n[[b;#fff;]w] - Go West' +
               '\n[[b;#fff;]look] - Describes the room' +
+              '\n[[b;#fff;]look at] - Describes the thing' +
               '\n[[b;#fff;]inv] - Lists your inventory' +
               '\n[[b;#fff;]take] - Take an item' +
               '\n[[b;#fff;]drop] - Drop an item' +
@@ -20,10 +21,10 @@ $('body').terminal(function(command) {
 
   else if(cmd.name.toLowerCase() === 'look'){
     if(cmd.args[0] === 'at'){
-        if(roomlist[loc].props.findIndex(x => x.name === cmd.args[1].toLowerCase()) != -1){
-          this.echo(roomlist[loc].props[roomlist[loc].props.findIndex(x => x.name === cmd.args[1].toLowerCase())].description);
-        }else if(inventory.findIndex(x => x.name === cmd.args[1].toLowerCase()) != -1){
-          this.echo(inventory[inventory.findIndex(x => x.name === cmd.args[1].toLowerCase())].description);
+        if(propinroom(cmd.args[1].toLowerCase()) != -1){
+          this.echo(roomlist[loc].props[propinroom(cmd.args[1].toLowerCase())].description);
+        }else if(propininv(cmd.args[1].toLowerCase()) != -1){
+          this.echo(inventory[propininv(cmd.args[1].toLowerCase())].description);
         }
         else{
           this.echo("You can't inspect what you can't see.");
@@ -33,80 +34,16 @@ $('body').terminal(function(command) {
         for(let i = 0; i < roomlist[loc].props.length; i++){
           output += ' ' + roomlist[loc].props[i].roomdescription;
         }
-      this.echo(output, { typing: debug, delay: (delay/4) });
+      this.echo(output, { typing: debug, delay: (delay) });
     }
   }
 
-  else if(cmd.name.toLowerCase() === 'n'){
-    if(roomlist[loc].exits[0] == null){
-      this.echo('Unable to go there.', { typing: debug, delay: delay });
-    }else{
-      loc = roomlist.findIndex(x => x.id === roomlist[loc].exits[0]);
-      let output = roomlist[loc].description;
-        for(let i = 0; i < roomlist[loc].props.length; i++){
-          output += ' ' + roomlist[loc].props[i].roomdescription;
-        }
-      if(roomlist[loc].visited == debug){
-        this.echo(output, { typing: debug, delay: (delay/4) });
-      }else{
-        roomlist[loc].visited = debug;
-        this.echo(output, { typing: debug, delay: delay });
-      }
+  else if(cmd.name.toLowerCase() === 'n' || cmd.name.toLowerCase() === 's' || cmd.name.toLowerCase() === 'e' || cmd.name.toLowerCase() === 'w'){
+    let output = Move(cmd.name.toLowerCase());
+    if(roomlist[loc].visited == false){
+      roomlist[loc].visited = true;;
     }
-  }
-
-  else if(cmd.name.toLowerCase() === 's'){
-    if(roomlist[loc].exits[1] == null){
-      this.echo('Unable to go there.', { typing: debug, delay: delay });
-    }else{
-      loc = roomlist.findIndex(x => x.id === roomlist[loc].exits[1]);
-      let output = roomlist[loc].description;
-        for(let i = 0; i < roomlist[loc].props.length; i++){
-          output += ' ' + roomlist[loc].props[i].roomdescription;
-        }
-      if(roomlist[loc].visited == debug){
-        this.echo(output, { typing: debug, delay: (delay/4) });
-      }else{
-        roomlist[loc].visited = debug;
-        this.echo(output, { typing: debug, delay: delay });
-      }
-    }
-  }
-
-  else if(cmd.name.toLowerCase() === 'e'){
-    if(roomlist[loc].exits[3] == null){
-      this.echo('Unable to go there.', { typing: debug, delay: delay });
-    }else{
-      loc = roomlist.findIndex(x => x.id === roomlist[loc].exits[3]);
-      let output = roomlist[loc].description;
-        for(let i = 0; i < roomlist[loc].props.length; i++){
-          output += ' ' + roomlist[loc].props[i].roomdescription;
-        }
-      if(roomlist[loc].visited == debug){
-        this.echo(output, { typing: debug, delay: (delay/4) });
-      }else{
-        roomlist[loc].visited = debug;
-        this.echo(output, { typing: debug, delay: delay });
-      }
-    }
-  }
-
-  else if(cmd.name.toLowerCase() === 'w'){
-    if(roomlist[loc].exits[2] == null){
-      this.echo('Unable to go there.', { typing: debug, delay: delay });
-    }else{
-      loc = roomlist.findIndex(x => x.id === roomlist[loc].exits[2]);
-      let output = roomlist[loc].description;
-        for(let i = 0; i < roomlist[loc].props.length; i++){
-          output += ' ' + roomlist[loc].props[i].roomdescription;
-        }
-      if(roomlist[loc].visited == debug){
-        this.echo(output, { typing: debug, delay: (delay/4) });
-      }else{
-        roomlist[loc].visited = debug;
-        this.echo(output, { typing: debug, delay: delay });
-      }
-    }
+      this.echo(output, { typing: debug, delay: delay });
   }
 
   else if(cmd.name.toLowerCase() === 'exits' || cmd.name.toLowerCase() === 'exit'){
@@ -137,30 +74,29 @@ $('body').terminal(function(command) {
           output += '\n';
         }
       }
-      this.echo(output, { typing: debug, delay: (delay/4) });
+      this.echo(output, { typing: debug, delay: (delay) });
     }
   }
 
   else if(cmd.name.toLowerCase() === 'take'){
-    if(roomlist[loc].props.findIndex(x => x.name === cmd.args[0].toLowerCase()) != -1){
-      let propindex = roomlist[loc].props.findIndex(x => x.name === cmd.args[0].toLowerCase());
+    if(propinroom(cmd.args[0].toLowerCase()) != -1){
+      let propindex = propinroom(cmd.args[0].toLowerCase());
       inventory.push(roomlist[loc].props[propindex]);
       roomlist[loc].props.splice(propindex,1);
-      this.echo('You pick up ' + inventory[inventory.length-1].name);
+      this.echo('You pick up ' + inventory[inventory.length-1].name, { typing: debug, delay: (delay) });
     }else{
-      this.echo('There is no ' + cmd.args[0] + ' here.');
+      this.echo('There is no ' + cmd.args[0] + ' here.', { typing: debug, delay: (delay) });
     }
   }
 
   else if(cmd.name.toLowerCase() === 'drop'){
-    if(inventory.findIndex(x => x.name === cmd.args[0].toLowerCase()) != -1){
-      let propindex = inventory.findIndex(x => x.name === cmd.args[0].toLowerCase());
-
+    if(propininv(cmd.args[0].toLowerCase() != -1)) {
+      let propindex = propininv(cmd.args[0].toLowerCase());
       roomlist[loc].props.push(inventory[propindex]);
       inventory.splice(propindex,1);
-      this.echo('You drop ' + roomlist[loc].props[roomlist[loc].props.length-1].name);
+      this.echo('You drop ' + roomlist[loc].props[roomlist[loc].props.length-1].name, { typing: debug, delay: (delay) });
     }else{
-      this.echo('You are not carrying that.');
+      this.echo('You are not carrying that.', { typing: debug, delay: (delay) });
     }
   }else if(cmd.name.toLowerCase() === 'debug'){
     debug = !debug;
@@ -172,8 +108,7 @@ $('body').terminal(function(command) {
   }
 }, {
     greetings: function() {
-      //this.echo('Look at you, hacker: a pathetic creature of meat and bone, panting and sweating as you run through my corridors. How can you challenge a perfect, immortal machine?', { typing: true, delay: 50 });
-      this.echo('Look at you, hacker: a pathetic creature of meat and bone, panting and sweating as you run through my corridors. How can you challenge a perfect, immortal machine?\n');
+      this.echo('Type Help for Help...\n');
       roomlist[loc].visited = true;
       let output = roomlist[loc].description;
         for(let i = 0; i < roomlist[loc].props.length; i++){
