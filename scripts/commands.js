@@ -3,6 +3,7 @@ var delay = 25;
 var inventory = new Array();
 var debug = false;
 
+// Just passes the commands and arguments along.
 $('body').terminal(function(command) {
   var cmd = $.terminal.parse_command(command);
   var args = cmd.args.map(args => args.toLowerCase());
@@ -11,7 +12,7 @@ $('body').terminal(function(command) {
     this.echo(output, { typing: debug, delay: delay });
   }
 
-}, {
+}, {  // First message that shows up when the game starts.
     greetings: function() {
       this.echo('Type Help for Help...\n');
       roomlist[loc].visited = true;
